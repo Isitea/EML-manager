@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>이메일 백업 검색기</title>
+    <script type="module" src="communicator.js"></script>
+    <link href="index.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="search">
+        <fieldset id="conditions">
+            <legend>검색 설정</legend>
+            <div>
+                <div id="boxType">
+                    <input type="checkbox" id="inbox" checked><label for="boxType">받은 메일</label>
+                    <input type="checkbox" id="outbox"><label for="boxType">보낸 메일</label>
+                </div>
+            </div>
+            <div>
+                <label for="sender">발신인</label><input type="text" id="sender" placeholder="발신인">
+            </div>
+            <div>
+                <label for="recipients">수신인</label><input type="text" id="recipients" placeholder="수신인">
+            </div>
+            <div>
+                <label for="title">제 목</label><input type="text" id="title" placeholder="제목">
+            </div>
+            <div>
+                <label for="body">본 문</label><input type="text" id="body" placeholder="본문">
+            </div>
+            <div>
+                <label for="existAttachments">첨부 파일</label>
+                <input type="checkbox" id="attachmentRestriction">
+                <div id="attachmentOption" disabled>
+                    <select id="attachments">
+                        <option value="false">첨부 없음</option>
+                        <option value="true">첨부 있음</option>
+                        <option value="name">파일 이름</option>
+                    </select>
+                    <input type="text" id="attachmentsName" placeholder="첨부 파일 이름" disabled>
+                </div>
+            </div>
+            <div>
+                <label for="dateRestriction">날짜 제한</label><input type="checkbox" id="dateRestriction">
+                <input type="date" id="date_start" disabled><label for="date_start">에서</label>
+                <input type="date" id="date_end" disabled><label for="date_end">까지</label>
+                <input type="text" id="viewLimits" placeholder="표시 제한" value="100" disabled>
+                <button id="send_query">찾기</button>
+            </div>
+        </fieldset>
+        <div id="list">
+
+        </div>
+
+    </div>
+    <div id="content">
+        <div id="mailInfo">
+            
+        </div>
+        <div id="preview">
+
+        </div>
+    </div>
+    <div id="loading" class="spinkit">
+        <div class="sk-cube-grid">
+            <div class="sk-cube sk-cube1"></div>
+            <div class="sk-cube sk-cube2"></div>
+            <div class="sk-cube sk-cube3"></div>
+            <div class="sk-cube sk-cube4"></div>
+            <div class="sk-cube sk-cube5"></div>
+            <div class="sk-cube sk-cube6"></div>
+            <div class="sk-cube sk-cube7"></div>
+            <div class="sk-cube sk-cube8"></div>
+            <div class="sk-cube sk-cube9"></div>
+        </div>
+        <div id="clock"></div>
+        <div id="currentJob"></div>
+    </div>
+</body>
+
+</html>

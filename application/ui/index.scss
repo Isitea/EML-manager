@@ -1,0 +1,428 @@
+$bW: 21px;
+$bH: 21px;
+$titleW: 75px;
+$searchW: 640px;
+
+
+* {
+    box-sizing: border-box !important;
+    font-family: monospace;
+    //border: none;
+    //padding: 0;
+    margin: 0;
+    line-height: $bH;
+    //background-color: rgba(0, 0, 0, 0.25);
+}
+
+body {
+    overflow: hidden;
+
+    >div {
+        float: left;
+        height: 100vh;
+
+        &#search {
+            width: $searchW;
+
+            * {
+                height: $bH;
+            }
+
+            >fieldset {
+                height: $bH * 9;
+
+                >div {
+                    height: $bH;
+                    width: 100%;
+                    display: flex;
+
+                    * {
+                        float: left;
+                    }
+
+                    >div#boxType {
+                        position: relative;
+                        left: 50%;
+                        transform: translate(-50%, 0);
+
+                        >label {
+                            position: relative;
+                        }
+                    }
+
+                    label {
+                        width: $titleW;
+                        white-space: pre-wrap;
+                        text-align: center;
+                    }
+
+                    >input[type=text]:not(#viewLimits, #attachmentsName) {
+                        width: calc(100% - $titleW);
+                    }
+
+                    >div#attachmentOption {
+                        width: calc(100% - $titleW - $bW);
+
+                        &[disabled] {
+                            pointer-events: none;
+
+                            >select {
+                                background-color: rgba(128, 128, 128, 0.1);
+                                color: gray;
+                            }
+
+                            >input#attachmentsName {
+                                background-color: rgba(239, 239, 239, 0.3);
+                                color: rgb(170, 170, 170);
+                            }
+                        }
+
+                        >select {
+                            width: $titleW * 1.5;
+                        }
+
+                        >input#attachmentsName {
+                            width: calc(100% - $titleW * 1.5);
+                        }
+                    }
+
+                    >input[type=date] {
+                        width: $titleW * 1.5;
+                    }
+
+                    >input#viewLimits {
+                        width: $titleW * 0.5;
+                        display: none;
+                    }
+
+                    input[type=checkbox] {
+                        width: $bW;
+                    }
+
+                    >button {
+                        width: calc(100% - $titleW * 6 - $bW );
+                        line-height: $bH - 6px;
+                    }
+                }
+
+            }
+
+            >div#list {
+                height: calc(100% - $bH*9);
+                overflow-y: auto;
+                //padding: $bH 0 $bH 0;
+                padding: 0 $bW / 5 0 $bW / 5;
+
+                >query-item {
+                    margin: $bH 0 $bH 0;
+                    padding: $bH / 4;
+                    display: block;
+                    border: solid 1px rgba(101, 106, 133, 0.89);
+                    height: $bH * 6;
+                    overflow: hidden;
+                    transition: all 0.5s;
+
+                    &:hover,
+                    &.selected {
+                        box-shadow: 3px 3px 6px 9px rgba(106, 91, 205, 0.75);
+                    }
+
+                    >* {
+                        white-space: pre-wrap;
+                    }
+
+                    >.itemDate {
+                        &.itemHasAttachment::after {
+                            content: "";
+                            height: $bH;
+                            width: $bW;
+                            float: right;
+                            background-image: url("./attachment.png");
+                        }
+                    }
+
+                    >.itemTitle {
+                        min-height: $bH;
+                        height: auto;
+                    }
+
+                    >.itemAttachment {
+                        display: flex;
+                        flex-direction: row;
+                        flex-wrap: wrap;
+                        height: calc(100% - $bH * 3);
+                        overflow-y: auto;
+
+                        &.noFileEmbeded {
+                            display: none !important;
+                        }
+
+                        >.filename {
+                            display: block;
+
+                            &::after {
+                                content: ", ";
+                            }
+
+                            //margin: $bW / 5 0 0 0;
+                            &:hover {
+                                color: rgb(138, 43, 226);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        &#content {
+            width: calc(100vw - $searchW);
+
+            >#mailInfo {
+                height: 25%;
+                width: 100%;
+                overflow: hidden;
+
+                >.itemDate {
+                    &.itemHasAttachment::after {
+                        content: "";
+                        height: $bH;
+                        width: $bW;
+                        float: right;
+                        background-image: url("./attachment.png");
+                    }
+                }
+
+                >.itemTitle {
+                    &:hover {
+                        position: relative;
+                        color: rgb(138, 43, 226);
+                        font-weight: 900;
+
+                        &::after {
+                            content: "이메일 열기";
+
+                            height: $bH;
+                            width: $titleW * 1.2;
+                            position: absolute;
+                            bottom: 100%;
+                            left: 50%;
+                            text-align: center;
+
+                            border-radius: $bH / 3;
+                            background-color: rgba(0, 0, 0, 0.8);
+                            color: #FFFFFF;
+                            z-index: 9999;
+                        }
+                    }
+                }
+
+                >.itemRecipient {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    align-content: flex-start;
+                    height: calc(100% - $bH * 5);
+                    overflow-y: auto;
+
+                    >.contact {
+                        display: block;
+                        height: $bH;
+
+                        &::after {
+                            content: ", ";
+                        }
+
+                        &:hover {
+                            color: rgb(138, 43, 226);
+                            font-weight: 900;
+                        }
+                    }
+                }
+
+                >.itemAttachment {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    align-content: flex-start;
+                    height: $bH * 2;
+                    overflow-y: auto;
+
+                    >.filename {
+                        display: block;
+                        height: $bH;
+
+                        &::after {
+                            content: ", ";
+                        }
+
+                        &[target=blank] {
+
+                            >img {
+                                position: fixed;
+                                z-index: 99999;
+                                display: none;
+                                width: attr(nWidth);
+                                height: attr(nHeight);
+                                max-width: 50vw;
+                                max-height: 50vh;
+                                top: 50vh;
+                                left: 50vw;
+                                transform: translate(-50%, -50%);
+                                box-shadow: 3px 3px 6px 9px rgba(114, 202, 230, 0.75);
+                            }
+                        }
+
+                        &:hover {
+                            color: rgb(138, 43, 226);
+                            position: relative;
+
+                            &[target=blank] {
+
+                                >img {
+                                    display: block;
+                                }
+                            }
+
+                            &::before {
+                                content: "파일 다운로드";
+
+
+                                height: $bH;
+                                width: $titleW * 1.5;
+                                position: absolute;
+                                top: 100%;
+                                left: 0;
+                                text-align: center;
+
+                                border-radius: $bH / 3;
+                                background-color: rgba(0, 0, 0, 0.8);
+                                color: #FFFFFF;
+                                z-index: 999999;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            >#preview {
+                height: 75%;
+                width: 100%;
+                overflow: auto;
+                border: solid navy 1px;
+                padding: $bW / 2;
+            }
+
+            &.noFileEmbeded {
+                >#mailInfo {
+                    height: 20%;
+
+                    >.itemRecipient {
+                        height: calc(100% - $bH * 3);
+                    }
+                }
+
+                >#preview {
+                    height: 80%;
+                }
+            }
+        }
+    }
+}
+
+body>div#loading {
+    display: none;
+
+    >#currentJob {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgb(240 248 255);
+    }
+
+    >#clock {
+        position: fixed;
+        bottom: 10vh;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgb(240 248 255);
+    }
+
+    &.spinkit {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background: rgba(101, 106, 133, 0.89)
+    }
+}
+
+// Reference: https: //tobiasahlin.com/spinkit/
+.sk-cube-grid {
+    width: 128px;
+    height: 128px;
+    position: relative;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%)
+}
+
+.sk-cube-grid .sk-cube {
+    width: 33%;
+    height: 33%;
+    background-color: #333;
+    float: left;
+    animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+}
+
+.sk-cube-grid .sk-cube1 {
+    animation-delay: 0.2s;
+}
+
+.sk-cube-grid .sk-cube2 {
+    animation-delay: 0.3s;
+}
+
+.sk-cube-grid .sk-cube3 {
+    animation-delay: 0.4s;
+}
+
+.sk-cube-grid .sk-cube4 {
+    animation-delay: 0.1s;
+}
+
+.sk-cube-grid .sk-cube5 {
+    animation-delay: 0.2s;
+}
+
+.sk-cube-grid .sk-cube6 {
+    animation-delay: 0.3s;
+}
+
+.sk-cube-grid .sk-cube7 {
+    animation-delay: 0s;
+}
+
+.sk-cube-grid .sk-cube8 {
+    animation-delay: 0.1s;
+}
+
+.sk-cube-grid .sk-cube9 {
+    animation-delay: 0.2s;
+}
+
+@keyframes sk-cubeGridScaleDelay {
+
+    0%,
+    70%,
+    100% {
+        transform: scale3D(1, 1, 1);
+    }
+
+    35% {
+        transform: scale3D(0, 0, 1);
+    }
+}

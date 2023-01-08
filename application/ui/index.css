@@ -1,0 +1,337 @@
+@charset "UTF-8";
+* {
+  box-sizing: border-box !important;
+  font-family: monospace;
+  margin: 0;
+  line-height: 21px;
+}
+
+body {
+  overflow: hidden;
+}
+body > div {
+  float: left;
+  height: 100vh;
+}
+body > div#search {
+  width: 640px;
+}
+body > div#search * {
+  height: 21px;
+}
+body > div#search > fieldset {
+  height: 189px;
+}
+body > div#search > fieldset > div {
+  height: 21px;
+  width: 100%;
+  display: flex;
+}
+body > div#search > fieldset > div * {
+  float: left;
+}
+body > div#search > fieldset > div > div#boxType {
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+body > div#search > fieldset > div > div#boxType > label {
+  position: relative;
+}
+body > div#search > fieldset > div label {
+  width: 75px;
+  white-space: pre-wrap;
+  text-align: center;
+}
+body > div#search > fieldset > div > input[type=text]:not(#viewLimits, #attachmentsName) {
+  width: calc(100% - 75px);
+}
+body > div#search > fieldset > div > div#attachmentOption {
+  width: calc(100% - 75px - 21px);
+}
+body > div#search > fieldset > div > div#attachmentOption[disabled] {
+  pointer-events: none;
+}
+body > div#search > fieldset > div > div#attachmentOption[disabled] > select {
+  background-color: rgba(128, 128, 128, 0.1);
+  color: gray;
+}
+body > div#search > fieldset > div > div#attachmentOption[disabled] > input#attachmentsName {
+  background-color: rgba(239, 239, 239, 0.3);
+  color: rgb(170, 170, 170);
+}
+body > div#search > fieldset > div > div#attachmentOption > select {
+  width: 112.5px;
+}
+body > div#search > fieldset > div > div#attachmentOption > input#attachmentsName {
+  width: calc(100% - 112.5px);
+}
+body > div#search > fieldset > div > input[type=date] {
+  width: 112.5px;
+}
+body > div#search > fieldset > div > input#viewLimits {
+  width: 37.5px;
+  display: none;
+}
+body > div#search > fieldset > div input[type=checkbox] {
+  width: 21px;
+}
+body > div#search > fieldset > div > button {
+  width: calc(100% - 450px - 21px);
+  line-height: 15px;
+}
+body > div#search > div#list {
+  height: calc(100% - 189px);
+  overflow-y: auto;
+  padding: 0 4.2px 0 4.2px;
+}
+body > div#search > div#list > query-item {
+  margin: 21px 0 21px 0;
+  padding: 5.25px;
+  display: block;
+  border: solid 1px rgba(101, 106, 133, 0.89);
+  height: 126px;
+  overflow: hidden;
+  transition: all 0.5s;
+}
+body > div#search > div#list > query-item:hover, body > div#search > div#list > query-item.selected {
+  box-shadow: 3px 3px 6px 9px rgba(106, 91, 205, 0.75);
+}
+body > div#search > div#list > query-item > * {
+  white-space: pre-wrap;
+}
+body > div#search > div#list > query-item > .itemDate.itemHasAttachment::after {
+  content: "";
+  height: 21px;
+  width: 21px;
+  float: right;
+  background-image: url("./attachment.png");
+}
+body > div#search > div#list > query-item > .itemTitle {
+  min-height: 21px;
+  height: auto;
+}
+body > div#search > div#list > query-item > .itemAttachment {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: calc(100% - 63px);
+  overflow-y: auto;
+}
+body > div#search > div#list > query-item > .itemAttachment.noFileEmbeded {
+  display: none !important;
+}
+body > div#search > div#list > query-item > .itemAttachment > .filename {
+  display: block;
+}
+body > div#search > div#list > query-item > .itemAttachment > .filename::after {
+  content: ", ";
+}
+body > div#search > div#list > query-item > .itemAttachment > .filename:hover {
+  color: rgb(138, 43, 226);
+}
+body > div#content {
+  width: calc(100vw - 640px);
+}
+body > div#content > #mailInfo {
+  height: 25%;
+  width: 100%;
+  overflow: hidden;
+}
+body > div#content > #mailInfo > .itemDate.itemHasAttachment::after {
+  content: "";
+  height: 21px;
+  width: 21px;
+  float: right;
+  background-image: url("./attachment.png");
+}
+body > div#content > #mailInfo > .itemTitle:hover {
+  position: relative;
+  color: rgb(138, 43, 226);
+  font-weight: 900;
+}
+body > div#content > #mailInfo > .itemTitle:hover::after {
+  content: "이메일 열기";
+  height: 21px;
+  width: 90px;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  text-align: center;
+  border-radius: 7px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #FFFFFF;
+  z-index: 9999;
+}
+body > div#content > #mailInfo > .itemRecipient {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  height: calc(100% - 105px);
+  overflow-y: auto;
+}
+body > div#content > #mailInfo > .itemRecipient > .contact {
+  display: block;
+  height: 21px;
+}
+body > div#content > #mailInfo > .itemRecipient > .contact::after {
+  content: ", ";
+}
+body > div#content > #mailInfo > .itemRecipient > .contact:hover {
+  color: rgb(138, 43, 226);
+  font-weight: 900;
+}
+body > div#content > #mailInfo > .itemAttachment {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  height: 42px;
+  overflow-y: auto;
+}
+body > div#content > #mailInfo > .itemAttachment > .filename {
+  display: block;
+  height: 21px;
+}
+body > div#content > #mailInfo > .itemAttachment > .filename::after {
+  content: ", ";
+}
+body > div#content > #mailInfo > .itemAttachment > .filename[target=blank] > img {
+  position: fixed;
+  z-index: 99999;
+  display: none;
+  width: attr(nWidth);
+  height: attr(nHeight);
+  max-width: 50vw;
+  max-height: 50vh;
+  top: 50vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+  box-shadow: 3px 3px 6px 9px rgba(114, 202, 230, 0.75);
+}
+body > div#content > #mailInfo > .itemAttachment > .filename:hover {
+  color: rgb(138, 43, 226);
+  position: relative;
+}
+body > div#content > #mailInfo > .itemAttachment > .filename:hover[target=blank] > img {
+  display: block;
+}
+body > div#content > #mailInfo > .itemAttachment > .filename:hover::before {
+  content: "파일 다운로드";
+  height: 21px;
+  width: 112.5px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  text-align: center;
+  border-radius: 7px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #FFFFFF;
+  z-index: 999999;
+}
+body > div#content > #preview {
+  height: 75%;
+  width: 100%;
+  overflow: auto;
+  border: solid navy 1px;
+  padding: 10.5px;
+}
+body > div#content.noFileEmbeded > #mailInfo {
+  height: 20%;
+}
+body > div#content.noFileEmbeded > #mailInfo > .itemRecipient {
+  height: calc(100% - 63px);
+}
+body > div#content.noFileEmbeded > #preview {
+  height: 80%;
+}
+
+body > div#loading {
+  display: none;
+}
+body > div#loading > #currentJob {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(240, 248, 255);
+}
+body > div#loading > #clock {
+  position: fixed;
+  bottom: 10vh;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(240, 248, 255);
+}
+body > div#loading.spinkit {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(101, 106, 133, 0.89);
+}
+
+.sk-cube-grid {
+  width: 128px;
+  height: 128px;
+  position: relative;
+  top: 50vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+}
+
+.sk-cube-grid .sk-cube {
+  width: 33%;
+  height: 33%;
+  background-color: #333;
+  float: left;
+  animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+}
+
+.sk-cube-grid .sk-cube1 {
+  animation-delay: 0.2s;
+}
+
+.sk-cube-grid .sk-cube2 {
+  animation-delay: 0.3s;
+}
+
+.sk-cube-grid .sk-cube3 {
+  animation-delay: 0.4s;
+}
+
+.sk-cube-grid .sk-cube4 {
+  animation-delay: 0.1s;
+}
+
+.sk-cube-grid .sk-cube5 {
+  animation-delay: 0.2s;
+}
+
+.sk-cube-grid .sk-cube6 {
+  animation-delay: 0.3s;
+}
+
+.sk-cube-grid .sk-cube7 {
+  animation-delay: 0s;
+}
+
+.sk-cube-grid .sk-cube8 {
+  animation-delay: 0.1s;
+}
+
+.sk-cube-grid .sk-cube9 {
+  animation-delay: 0.2s;
+}
+
+@keyframes sk-cubeGridScaleDelay {
+  0%, 70%, 100% {
+    transform: scale3D(1, 1, 1);
+  }
+  35% {
+    transform: scale3D(0, 0, 1);
+  }
+}/*# sourceMappingURL=index.css.map */

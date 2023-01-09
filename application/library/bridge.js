@@ -12,15 +12,22 @@ export class Bridge {
         return DB.prepare( `SELECT * FROM ${ table } LIMIT 1` ).all()
     }
 
-    insert ( table, mailData ) {
+    insert ( table, { messageId, date, sender, recipient, alt_recipient, title, body, attachments, file } ) {
+        const mailData = {}
+        // Prepare SQLite3 queries
         const DB = this.DB;
         const duplicated = DB.prepare( `SELECT * FROM ${ table } WHERE uniqueId LIKE @uniqueId` )
         const insertion = DB.prepare( `INSERT INTO ${ table } VALUES ( @messageId, @date, @uniqueId, @sender, @recipient, @alt_recipient, @title, @body, @attachments, @file )` )
-        for ( const [ key, value ] of Object.entries( mailData ) ) {
-            mailData[ key ] = ( typeof value === "string" ? value : JSON.stringify( value ) ).replace( /'+/g, "''" );
-        }
+        // Transform data for insertion
+        for ( const [ key, value ] of Object.entries( { messageId, date } ) ) mailData[ key ] = value
+        for ( const [ key, value ] of Object.entries( { title, body } ) ) mailData[ key ] = value.replace( /'+/g, "''" )
+        for ( const [ key, value ] of Object.entries( { sender, recipient, alt_recipient, attachments } ) ) mailData[ key ] = JSON.stringify( value )?.replace( /'+/g, "''" )
+        mailData.file = file.replace( /'/g, "''" )
+
+        // Check DB with uniqueId
         const uniqueId = mailData.messageId + "#" + mailData.date;
         const matches = duplicated.all( { uniqueId } )
+        // If not exist, perform an insertion
         if ( matches.length === 0 ) insertion.run( { ...mailData, uniqueId } )
     }
 
@@ -55,7 +62,7 @@ export class Bridge {
                 }
             }
 
-            if ( date_start && date_end ) {
+            if ( date_start !== undefined && date_end !== undefined ) {
                 conds.push( `date BETWEEN @date_start AND @date_end` )
             }
 

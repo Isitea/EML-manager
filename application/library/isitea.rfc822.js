@@ -33,7 +33,7 @@ export class eMailBox {
         for ( const table of mailBoxes ) {
             const rows = bridge.initTable( table, _Structure )
             if ( rows.length === 0 ) {
-                ( async function () {
+                await ( async function () {
                     for await ( const list of readMailBox( table, 10, 0 ) ) {
                         for ( const mail of list ) {
                             bridge.insert( table, mail )

@@ -23,18 +23,9 @@ class Contact {
     }
 }
 
-class Attachment {
-    constructor ( attachment ) {
-        const { filename, content, ...properties } = attachment;
-        this.filename = filename;
-        this.arrayBuffer = content;
-        for ( const [ field, value ] of Object.entries( properties ) ) this[ field ] = value;
-    }
-}
-
 class Attachments {
     constructor ( attachments ) {
-        this.files = attachments.map( file => new Attachment( file ) )
+        this.files = attachments.map( ( { content: arrayBuffer, ...data } ) => ( { arrayBuffer, ...data } ) )
     }
 
     get list () {
@@ -60,7 +51,7 @@ class eMail {
         } ) ) {
             this[ field ] = value;
         }
-        this.attachments = this.binaries.list
+        this.attachments = binaries.list
     }
 }
 

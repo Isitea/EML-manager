@@ -88,6 +88,7 @@ export class eMailBox {
     }
 
     async updateDB () {
+        const bridge = this.bridge;
         for ( const table of mailBoxes ) {
             for await ( const list of readMailBox( `update/${ table }`, 10, 0 ) ) {
                 for ( const mail of list ) {

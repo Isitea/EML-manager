@@ -123,7 +123,7 @@ class QueryItem extends HTMLElement {
                             image.addEventListener( "load", function () {
                                 image.setAttribute( "nHeight", image.naturalHeight )
                                 image.setAttribute( "nWidth", image.naturalWidth )
-                            })
+                            } )
                             anchor.append( image );
                         }
                         anchor.download = filename;
@@ -286,6 +286,11 @@ async function initialize () {
             window.server.invoke( "SearchDB", getFilters() )
                 .then( updateList )
                 .then( () => clock.pauseClock() )
+        } )
+    document.querySelector( "#conditions" )
+        .addEventListener( "keyup", function ( { key, code, keyCode } ) {
+            if ( key === "Enter" && code === "Enter" && keyCode === 13 )
+                document.querySelector( "#send_query" ).click();
         } )
     window.server.ipc_on( 'update_DB', function ( electronEvent, ...args ) {
         document.querySelector( "#currentJob" ).textContent = args

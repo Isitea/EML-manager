@@ -6,14 +6,20 @@ const { mkdir } = require( "node:fs/promises" )
 if ( require( 'electron-squirrel-startup' ) ) app.quit();
 app.disableHardwareAcceleration();
 
-class terminal {
-    constructor ( terminal ) {
-        this.terminal = terminal
+class Tunnel {
+    constructor ( tunnel ) {
+        this.tunnel = tunnel
         this.flag = true
     }
+
+    info ( ...args ) {
+        console.log( ...args )
+        if ( typeof this.tunnel.send === "function" ) this.tunnel.send( "update_DB", ...args )
+    }
+
     log ( ...args ) {
-        if ( this.flag && typeof this.terminal.send === "function" ) {
-            this.terminal.send( "update_DB", ...args )
+        if ( this.flag && typeof this.tunnel.send === "function" ) {
+            this.tunnel.send( "update_DB", ...args )
             this.flag = false
             setTimeout( () => this.flag = true, 1000 )
         }
@@ -51,7 +57,7 @@ async function main () {
     app.whenReady().then( async () => {
         const WebView = createWindow()
         const { eMailBox, Bridge } = await ESModule;
-        const manager = new eMailBox( new Bridge( "./emails.db" ), new terminal( WebView ) )
+        const manager = new eMailBox( new Bridge( "./emails.db" ), new Tunnel( WebView ) )
 
         ipcMain.handle( "InitDB", async function ( electronEvent, ...args ) {
             await manager.initDB()
@@ -70,12 +76,12 @@ async function main () {
             //console.log( args )
             //console.log( manager.search( mailbox, { body: "%cid%" } ) )
             if ( mailbox ) {
-                return manager.search( mailbox, args )
+                return { [ mailbox ]: manager.search( mailbox, args ) }
             }
             else {
                 return {
-                    inbox: manager.search( "inbox", args ).inbox,
-                    outbox: manager.search( "outbox", args ).outbox,
+                    inbox: manager.search( "inbox", args ),
+                    outbox: manager.search( "outbox", args ),
                 }
             }
         } )

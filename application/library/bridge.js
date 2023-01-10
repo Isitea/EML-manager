@@ -72,4 +72,42 @@ export class Bridge {
         }
 
     }
+
+    search ( table, { messageId, date, uniqueId, sender, recipient, alt_recipient, title, body, attachments, file } ) {
+        const DB = this.DB;
+        const condition = { messageId, date, uniqueId, sender, recipient, alt_recipient, title, body, attachments, file };
+        const expression = [];
+        for ( const name of Object.entries( condition )
+            .filter( ( [ key, value ] ) => ( value !== undefined ) ).map( ( [ key, value ] ) => key ) ) {
+            switch ( name ) {
+                case "date": {
+                    condition.date_start = condition.date.start
+                    condition.date_end = condition.date.end
+                    expression.push( `( date BETWEEN @date_start AND @date_end )` )
+                    break;
+                }
+                case "attachments": {
+                    switch ( condition.attachments ) {
+                        case false: {
+                            condition.attachments = "[]"
+                            break;
+                        }
+                        case true: {
+                            condition.attachments = "[_%]"
+                            break;
+                        }
+                        default: {
+                            condition.attachments = `[${ condition.attachments }]`
+                        }
+                    }
+                }
+                default: {
+                    expression.push( `( ${ name } LIKE @${ name } )` )
+                }
+            }
+        }
+        const state = DB.prepare( `SELECT * FROM ${ table }${ ( expression.length > 0 ? ` WHERE ${ expression.join( " AND " ) }` : "" ) } ORDER BY date DESC NULLS LAST;` )
+        return state.all( condition );
+    }
+
 }

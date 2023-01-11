@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell } = require( "electron" );
+const { app, BrowserWindow, ipcMain, shell, Menu } = require( "electron" );
 const { exec } = require( "node:child_process" )
 const { join } = require( "node:path" );
 const { mkdir } = require( "node:fs/promises" )
@@ -13,13 +13,13 @@ class Tunnel {
     }
 
     info ( ...args ) {
-        console.log( ...args )
-        if ( typeof this.tunnel.send === "function" ) this.tunnel.send( "update_DB", ...args )
+        this.flag = false
+        this.log( ...args )
     }
 
     log ( ...args ) {
         if ( this.flag && typeof this.tunnel.send === "function" ) {
-            this.tunnel.send( "update_DB", ...args )
+            this.tunnel.send( "console", ...args )
             this.flag = false
             setTimeout( () => this.flag = true, 1000 )
         }

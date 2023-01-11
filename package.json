@@ -1,6 +1,6 @@
 {
   "name": "eml-manager",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Managing EML files similar to PST or OST with local database (SQLite3)",
   "main": "application/electron.cjs",
   "type": "module",
@@ -25,7 +25,7 @@
     "@electron-forge/cli": "^6.0.4",
     "@electron-forge/maker-squirrel": "^6.0.4",
     "@electron/rebuild": "^3.2.10",
-    "electron": "^22.0.0"
+    "electron": "^22.0.1"
   },
   "config": {
     "forge": "forge.config.cjs"

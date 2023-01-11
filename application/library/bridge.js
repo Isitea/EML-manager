@@ -34,7 +34,7 @@ export class Bridge {
     search ( table, { uniqueId, date_start, date_end, attachments, recipients, ...cond } ) {
         const DB = this.DB;
         if ( uniqueId !== undefined ) {
-            return DB.prepare( `SELECT * FROM ${ table } WHERE $uniquId = @uniqueId ORDER BY date DESC NULLS LAST;` )
+            return DB.prepare( `SELECT * FROM ${ table } WHERE $uniquId = @uniqueId ORDER BY date DESC, title ASC NULLS LAST;` )
                 .all( { uniqueId } )
         }
         else {

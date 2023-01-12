@@ -292,8 +292,17 @@ async function initialize () {
             if ( key === "Enter" && code === "Enter" && keyCode === 13 )
                 document.querySelector( "#send_query" ).click();
         } )
-    window.server.ipc_on( 'update_DB', function ( electronEvent, ...args ) {
+    window.server.ipc_on( 'console', function ( electronEvent, ...args ) {
         document.querySelector( "#currentJob" ).textContent = args
+    } )
+    window.server.ipc_on( 'Request-Action', function ( electronEvent, { type, ...args } ) {
+        switch ( type ) {
+            case "update": {
+                window.server.invoke( "UpdateDB", clock.startClock() )
+                    .then( () => clock.pauseClock() )
+                break;
+            }
+        }
     } )
 
 }

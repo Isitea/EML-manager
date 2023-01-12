@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell } = require( "electron" );
+const { app, BrowserWindow, ipcMain, shell, Menu } = require( "electron" );
 const { exec } = require( "node:child_process" )
 const { join } = require( "node:path" );
 const { mkdir } = require( "node:fs/promises" )
@@ -13,19 +13,23 @@ class Tunnel {
     }
 
     info ( ...args ) {
-        console.log( ...args )
-        if ( typeof this.tunnel.send === "function" ) this.tunnel.send( "update_DB", ...args )
+        this.flag = false
+        this.log( ...args )
     }
 
     log ( ...args ) {
         if ( this.flag && typeof this.tunnel.send === "function" ) {
-            this.tunnel.send( "update_DB", ...args )
+            this.tunnel.send( "console", ...args )
             this.flag = false
             setTimeout( () => this.flag = true, 1000 )
         }
         else {
             console.log( ...args )
         }
+    }
+
+    query ( type, statement ) {
+        this.tunnel.send( type, statement )
     }
 }
 
@@ -55,12 +59,17 @@ async function main () {
     }
 
     app.whenReady().then( async () => {
+        // Create GUI as Window
         const WebView = createWindow()
+        const tunnel = new Tunnel( WebView )
         const { eMailBox, Bridge } = await ESModule;
-        const manager = new eMailBox( new Bridge( "./emails.db" ), new Tunnel( WebView ) )
+        const manager = new eMailBox( new Bridge( "./emails.db" ), tunnel )
 
         ipcMain.handle( "InitDB", async function ( electronEvent, ...args ) {
             await manager.initDB()
+            await manager.updateDB()
+        } );
+        ipcMain.handle( "UpdateDB", async function ( electronEvent, ...args ) {
             await manager.updateDB()
         } );
         ipcMain.handle( "OpenFile", function ( electronEvent, { file } ) {
@@ -85,6 +94,26 @@ async function main () {
                 }
             }
         } )
+
+        // Adjust Menubar
+        const menu = Menu.buildFromTemplate( [
+            {
+                label: "Update e-mail DB",
+                click: function () {
+                    tunnel.query( "Request-Action", { type: "update" } )
+                }
+            },
+            { type: "separator" },
+            {
+                label: "Open update source directory",
+                click: function () {
+                    exec( `start update` )
+                }
+            },
+            { type: "separator" },
+            { role: "quit" },
+        ] )
+        Menu.setApplicationMenu( menu )
 
     } )
 

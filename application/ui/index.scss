@@ -3,10 +3,11 @@ $bH: 21px;
 $titleW: 75px;
 $searchW: 640px;
 
+@import url(https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css);
 
 * {
     box-sizing: border-box !important;
-    font-family: monospace;
+    font-family: 'Nanum Gothic Coding', monospace;
     //border: none;
     //padding: 0;
     margin: 0;

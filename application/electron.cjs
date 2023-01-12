@@ -27,6 +27,10 @@ class Tunnel {
             console.log( ...args )
         }
     }
+
+    query ( type, statement ) {
+        this.tunnel.send( type, statement )
+    }
 }
 
 async function main () {
@@ -55,12 +59,17 @@ async function main () {
     }
 
     app.whenReady().then( async () => {
+        // Create GUI as Window
         const WebView = createWindow()
+        const tunnel = new Tunnel( WebView )
         const { eMailBox, Bridge } = await ESModule;
-        const manager = new eMailBox( new Bridge( "./emails.db" ), new Tunnel( WebView ) )
+        const manager = new eMailBox( new Bridge( "./emails.db" ), tunnel )
 
         ipcMain.handle( "InitDB", async function ( electronEvent, ...args ) {
             await manager.initDB()
+            await manager.updateDB()
+        } );
+        ipcMain.handle( "UpdateDB", async function ( electronEvent, ...args ) {
             await manager.updateDB()
         } );
         ipcMain.handle( "OpenFile", function ( electronEvent, { file } ) {
@@ -85,6 +94,26 @@ async function main () {
                 }
             }
         } )
+
+        // Adjust Menubar
+        const menu = Menu.buildFromTemplate( [
+            {
+                label: "Update e-mail DB",
+                click: function () {
+                    tunnel.query( "Request-Action", { type: "update" } )
+                }
+            },
+            { type: "separator" },
+            {
+                label: "Open update source directory",
+                click: function () {
+                    exec( `start update` )
+                }
+            },
+            { type: "separator" },
+            { role: "quit" },
+        ] )
+        Menu.setApplicationMenu( menu )
 
     } )
 

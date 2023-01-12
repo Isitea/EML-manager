@@ -1,7 +1,8 @@
 @charset "UTF-8";
+@import url(https://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css);
 * {
   box-sizing: border-box !important;
-  font-family: monospace;
+  font-family: "Nanum Gothic Coding", monospace;
   margin: 0;
   line-height: 21px;
 }

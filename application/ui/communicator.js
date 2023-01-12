@@ -295,6 +295,15 @@ async function initialize () {
     window.server.ipc_on( 'console', function ( electronEvent, ...args ) {
         document.querySelector( "#currentJob" ).textContent = args
     } )
+    window.server.ipc_on( 'Request-Action', function ( electronEvent, { type, ...args } ) {
+        switch ( type ) {
+            case "update": {
+                window.server.invoke( "UpdateDB", clock.startClock() )
+                    .then( () => clock.pauseClock() )
+                break;
+            }
+        }
+    } )
 
 }
 async function connectToMainProcess () {

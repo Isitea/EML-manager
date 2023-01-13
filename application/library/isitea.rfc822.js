@@ -41,7 +41,7 @@ export class eMailBox {
                     for await ( const list of readMailBox( table, 10, 0 ) ) {
                         for ( const mail of list ) {
                             bridge.insert( table, mail )
-                            verbose.log( ++operations, mail.file.replace( /^.+[/\\]/, "" ) )
+                            verbose.log( ++operations, mail.file.replace( /^.+?([^/\\]+\.eml$)/, "$1" ) )
                         }
                     }
                 } )()
@@ -68,11 +68,6 @@ export class eMailBox {
                 }
             }
         }
-        if ( condition.recipients ) {
-            const recipients = condition.recipients
-            condition.recipient = recipients
-            condition.alt_recipient = recipients
-        }
         return bridge.search( box, condition )
     }
 
@@ -85,12 +80,12 @@ export class eMailBox {
                     mail.file = file.replace( /(^update[/\\])/, "" );
                     try {
                         await stat( mail.file )
-                        verbose.info( `[Passed] ${ mail.file.replace( /^.+[/\\]/, "" ) } is already exists.` )
+                        verbose.info( `[Passed] ${ file.replace( /^.+?([^/\\]+\.eml$)/, "$1" ) } is already exists.` )
                     }
                     catch {
                         await rename( file, mail.file )
                         bridge.insert( table, mail )
-                        verbose.log( ++operations, file.replace( /^.+[/\\]/, "" ) )
+                        verbose.log( ++operations, file.replace( /^.+?([^/\\]+\.eml$)/, "$1" ) )
                     }
                 }
             }

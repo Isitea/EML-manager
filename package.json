@@ -1,6 +1,6 @@
 {
   "name": "eml-manager",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Managing EML files similar to PST or OST with local database (SQLite3)",
   "main": "application/electron.cjs",
   "type": "module",

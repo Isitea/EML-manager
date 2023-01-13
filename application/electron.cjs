@@ -83,7 +83,6 @@ async function main () {
         } )
         ipcMain.handle( "SearchDB", function ( electronEvent, { mailbox, ...args } ) {
             //console.log( args )
-            //console.log( manager.search( mailbox, { body: "%cid%" } ) )
             if ( mailbox ) {
                 return { [ mailbox ]: manager.search( mailbox, args ) }
             }

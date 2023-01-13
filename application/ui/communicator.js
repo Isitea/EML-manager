@@ -300,6 +300,7 @@ async function initialize () {
             case "update": {
                 window.server.invoke( "UpdateDB", clock.startClock() )
                     .then( () => clock.pauseClock() )
+                    .then( () => document.querySelector( "#send_query" ).click() )
                 break;
             }
         }
@@ -310,10 +311,8 @@ async function connectToMainProcess () {
     await window.server.invoke( "InitDB", clock.startClock() )
         .then( () => clock.pauseClock() )
 
-    //For test
     clock.startClock()
     await window.server.invoke( "SearchDB", getFilters() )
-        //await window.server.invoke( "SearchDB", { mailbox: "inbox" } )
         .then( updateList )
         .then( () => clock.pauseClock() )
 

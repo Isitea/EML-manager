@@ -31,55 +31,19 @@ export class Bridge {
         if ( matches.length === 0 ) insertion.run( { ...mailData, uniqueId } )
     }
 
-    search ( table, { uniqueId, date_start, date_end, attachments, recipients, ...cond } ) {
+    search ( table, { messageId, date, uniqueId, sender, recipients, title, body, attachments, file } ) {
         const DB = this.DB;
-        if ( uniqueId !== undefined ) {
-            return DB.prepare( `SELECT * FROM ${ table } WHERE $uniquId = @uniqueId ORDER BY date DESC, title ASC NULLS LAST;` )
-                .all( { uniqueId } )
-        }
-        else {
-            const conds = Object.entries( cond )
-                .map( ( [ key, value ] ) => ( Boolean( value ) ? `${ key } LIKE @${ key }` : false ) )
-                .filter( state => Boolean( state ) );
-
-            if ( recipients !== undefined ) {
-                conds.push( `( recipient LIKE @recipients OR alt_recipient LIKE @recipients )` )
-            }
-
-            if ( attachments !== undefined ) {
-                switch ( cond.attachments ) {
-                    case true: {
-                        conds.push( `attachments NOT LIKE '[]'` )
-                        break;
-                    }
-                    case false: {
-                        conds.push( `attachments = '[]'` )
-                        break;
-                    }
-                    default: {
-                        conds.push( `attachments LIKE @attachments` )
-                    }
-                }
-            }
-
-            if ( date_start !== undefined && date_end !== undefined ) {
-                conds.push( `date BETWEEN @date_start AND @date_end` )
-            }
-
-            return DB.prepare( `SELECT * FROM ${ table } ${ ( conds.length > 0 ? `WHERE ${ conds.join( " AND " ) } ` : "" ) }ORDER BY date DESC NULLS LAST;` )
-                .all( { uniqueId, date_start, date_end, attachments, recipients, ...cond } )
-
-        }
-
-    }
-
-    search ( table, { messageId, date, uniqueId, sender, recipient, alt_recipient, title, body, attachments, file } ) {
-        const DB = this.DB;
-        const condition = { messageId, date, uniqueId, sender, recipient, alt_recipient, title, body, attachments, file };
+        const condition = { messageId, date, uniqueId, sender, recipients, title, body, attachments, file };
         const expression = [];
-        for ( const name of Object.entries( condition )
-            .filter( ( [ key, value ] ) => ( value !== undefined ) ).map( ( [ key, value ] ) => key ) ) {
+        for ( const name
+            of
+            Object.entries( condition )
+                .filter( ( [ key, value ] ) => ( value !== undefined ) ).map( ( [ key, value ] ) => key ) ) {
             switch ( name ) {
+                case "recipients": {
+                    expression.push( `( recipient LIKE @recipients OR alt_recipient LIKE @recipients )` )
+                    break;
+                }
                 case "date": {
                     condition.date_start = condition.date.start
                     condition.date_end = condition.date.end
@@ -104,6 +68,10 @@ export class Bridge {
                 default: {
                     expression.push( `( ${ name } LIKE @${ name } )` )
                 }
+            }
+            if ( condition[ name ].match( /^%-.+/ ) ) {
+                expression.push( `NOT ${ expression.pop() }` );
+                condition[ name ] = condition[ name ].replace( /^%-(.+)%/, "%$1%" );
             }
         }
         const state = DB.prepare( `SELECT * FROM ${ table }${ ( expression.length > 0 ? ` WHERE ${ expression.join( " AND " ) }` : "" ) } ORDER BY date DESC NULLS LAST;` )

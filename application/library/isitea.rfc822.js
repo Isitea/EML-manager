@@ -63,9 +63,6 @@ export class eMailBox {
                     condition.attachments = "[_%]"
                     break;
                 }
-                default: {
-                    condition.attachments = `[%${ condition.attachments }%]`
-                }
             }
         }
         return bridge.search( box, condition )
